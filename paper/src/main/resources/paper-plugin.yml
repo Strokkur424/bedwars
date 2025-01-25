@@ -6,4 +6,4 @@ api-version: 1.21.4
 bootstrapper: net.strokkur.bedwars.paper.BedwarsBootstrap
 loader: net.strokkur.bedwars.paper.BedwarsLoader
 author: Strokkur24
-load: STARTUP
+load: POSTWORLD
