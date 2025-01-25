@@ -1,0 +1,9 @@
+name: Bedwars
+version: $version
+main: net.strokkur.bedwars.paper.BedwarsPaper
+description: Remake of Hypixel's Bedwars
+api-version: 1.21.4
+bootstrapper: net.strokkur.bedwars.paper.BedwarsBootstrap
+loader: net.strokkur.bedwars.paper.BedwarsLoader
+author: Strokkur24
+load: STARTUP
