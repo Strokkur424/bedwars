@@ -26,7 +26,7 @@ public class BedwarsVelocity {
 
     @Inject
     public BedwarsVelocity(ProxyServer server, ComponentLogger logger, @DataDirectory Path dataPath) {
-        if (instance == null) {
+        if (instance != null) {
             throw new UnsupportedOperationException("Cannot create new instance of already created plugin main class.");
         }
 
