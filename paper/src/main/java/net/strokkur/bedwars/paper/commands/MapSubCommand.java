@@ -6,10 +6,12 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.strokkur.bedwars.paper.BedwarsPaper;
 import net.strokkur.bedwars.paper.commands.arguments.MapArgument;
-import org.bukkit.Bukkit;
+import net.strokkur.bedwars.paper.map.data.BedwarsMap;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NullMarked;
+
+import java.util.concurrent.CompletableFuture;
 
 @SuppressWarnings("UnstableApiUsage")
 @NullMarked
@@ -22,14 +24,22 @@ public class MapSubCommand {
 
                 .then(Commands.literal("*")
                     .executes(ctx -> {
-                        BedwarsPaper.worldManager().deleteBedwarsMaps();
+                        CompletableFuture.allOf(BedwarsPaper.worldManager().getAllBedwarsMaps().parallelStream()
+                            .map(BedwarsMap::unloadAllAsync)
+                            .toArray(CompletableFuture[]::new)
+                        ).thenRunAsync(() -> {
+                            ctx.getSource().getSender().sendRichMessage("<gold>Successfully unloaded all maps!");
+                        });
                         return Command.SINGLE_SUCCESS;
                     })
                 )
 
                 .then(Commands.argument("map", new MapArgument())
                     .executes(ctx -> {
-                        BedwarsPaper.worldManager().deleteBedwarsMaps();
+                        BedwarsPaper.worldManager().getMap(ctx.getArgument("map", String.class))
+                            .ifPresent(map -> map.unloadAllAsync()
+                                .thenRunAsync(() -> ctx.getSource().getSender().sendRichMessage("<aqua>Successfully unloaded " + ctx.getArgument("map", String.class)))
+                            );
                         return Command.SINGLE_SUCCESS;
                     })
                 )
@@ -39,16 +49,21 @@ public class MapSubCommand {
 
                 .then(Commands.argument("map", new MapArgument())
                     .executes(ctx -> {
-                        BedwarsPaper.worldManager().loadMap(ctx.getArgument("map", String.class))
-                            .thenAccept(world -> {
-                                Bukkit.getScheduler().runTask(BedwarsPaper.instance(), () -> {
-                                    if (ctx.getSource().getExecutor() instanceof Player player) {
-                                        player.teleport(new Location(world, 0, 250, 0));
-                                        player.setFlying(true);
-                                        player.sendRichMessage("<aqua>Teleported you to " + world.getName());
-                                    }
-                                });
-                            });
+                        BedwarsPaper.worldManager().getMap(ctx.getArgument("map", String.class))
+                            .ifPresent(map -> map.createInstance().loadMap()
+
+                                .thenAcceptAsync(
+                                    world -> {
+                                        if (ctx.getSource().getExecutor() instanceof Player player) {
+                                            player.teleport(new Location(world, 0, 250, 0));
+                                            player.setFlying(true);
+                                        }
+                                        ctx.getSource().getSender().sendRichMessage("<aqua>Successfully loaded " + map.name());
+                                    },
+                                    BedwarsPaper.mainThreadExecutor()
+                                )
+
+                            );
                         return Command.SINGLE_SUCCESS;
                     }))
 

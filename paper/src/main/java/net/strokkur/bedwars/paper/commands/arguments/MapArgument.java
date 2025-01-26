@@ -32,7 +32,7 @@ public class MapArgument implements CustomArgumentType.Converted<String, String>
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
         return CompletableFuture.supplyAsync(() -> {
-            for (String map : BedwarsPaper.worldManager().getAllMaps()) {
+            for (String map : BedwarsPaper.worldManager().getAllMapNames()) {
                 if (map.toLowerCase().startsWith(builder.getRemainingLowerCase())) {
                     builder.suggest(map);
                 }
