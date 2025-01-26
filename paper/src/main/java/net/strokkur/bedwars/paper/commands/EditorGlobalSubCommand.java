@@ -116,7 +116,7 @@ public class EditorGlobalSubCommand {
         return 1;
     }
 
-    public static LiteralArgumentBuilder<CommandSourceStack> construct() {
+    public static LiteralArgumentBuilder<CommandSourceStack> create() {
         return Commands.literal("global")
 
             .then(Commands.literal("iron-spawn-rate")

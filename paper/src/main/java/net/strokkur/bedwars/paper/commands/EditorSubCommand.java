@@ -4,9 +4,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
-import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
 import net.strokkur.bedwars.paper.commands.arguments.MapArgument;
-import net.strokkur.bedwars.paper.commands.arguments.TeamArgument;
 import org.jspecify.annotations.NullMarked;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -35,69 +33,9 @@ public class EditorSubCommand {
                 )
             )
 
-            .then(EditorGlobalSubCommand.construct())
+            .then(EditorGlobalSubCommand.create())
 
-            .then(Commands.literal("teams")
-                .then(Commands.literal("info")
-//                    .executes(EditorSubCommand::executeTeamsInfo)
-                )
-
-                .then(Commands.literal("remove")
-                    .then(Commands.argument("team", new TeamArgument())
-//                        .executes(EditorSubCommand::executeTeamRemove)
-                    )
-                )
-
-                .then(Commands.literal("add")
-                    .then(Commands.argument("team", new TeamArgument())
-//                        .executes(EditorSubCommand::executeTeamAdd)
-                    )
-                )
-
-                .then(Commands.literal("modify")
-                    .then(Commands.argument("team", new TeamArgument())
-
-                        .then(Commands.literal("spawn")
-                            .then(Commands.argument("location", ArgumentTypes.blockPosition())
-//                                .executes(EditorSubCommand::executeModifyTeamSpawn)
-                            )
-                        )
-
-                        .then(Commands.literal("generator")
-                            .then(Commands.argument("location", ArgumentTypes.blockPosition())
-//                                .executes(EditorSubCommand::executeModifyTeamGenerator)
-                            )
-                        )
-
-                        .then(Commands.literal("playershop")
-                            .then(Commands.argument("location", ArgumentTypes.blockPosition())
-//                                .executes(EditorSubCommand::executeModifyTeamPlayershop)
-                            )
-                        )
-
-                        .then(Commands.literal("teamshop")
-                            .then(Commands.argument("location", ArgumentTypes.blockPosition())
-//                                .executes(EditorSubCommand::executeModifyTeamTeamshop)
-                            )
-                        )
-
-                        .then(Commands.literal("bed")
-                            .then(Commands.argument("location", ArgumentTypes.blockPosition())
-//                                .executes(EditorSubCommand::executeModifyTeamBed)
-                            )
-                        )
-
-                        .then(Commands.literal("bounds")
-                            .then(Commands.argument("corner-one", ArgumentTypes.blockPosition())
-                                .then(Commands.argument("corner-two", ArgumentTypes.blockPosition())
-//                                    .executes(EditorSubCommand::executeModifyTeamBoundingBox)
-                                )
-                            )
-                        )
-
-                    )
-                )
-            );
+            .then(EditorTeamsSubCommand.create());
     }
 
     private static int executeJoin(final CommandContext<CommandSourceStack> ctx) {
@@ -105,6 +43,10 @@ public class EditorSubCommand {
     }
 
     private static int executeSaveConfig(final CommandContext<CommandSourceStack> ctx) {
+        return 1;
+    }
+
+    private static int executeSaveWorld(final CommandContext<CommandSourceStack> ctx) {
         return 1;
     }
 
