@@ -90,10 +90,6 @@ public class BedwarsPaper extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (mainWorld != null) {
-            Bukkit.getOnlinePlayers().forEach(player -> player.teleport(mainWorld.getSpawnLocation()));
-        }
-
-        worldManager().getAllBedwarsMaps().forEach(BedwarsMap::unloadAllSync);
+        worldManager().getAllBedwarsMaps().forEach(BedwarsMap::unloadAllAsync);
     }
 }

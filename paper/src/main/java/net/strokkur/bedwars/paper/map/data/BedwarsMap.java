@@ -46,16 +46,8 @@ public class BedwarsMap {
 
     public CompletableFuture<Void> unloadAllAsync() {
         return CompletableFuture
-            .allOf(instances.parallelStream().map(BedwarsMapInstance::deleteMapAsync).toArray(CompletableFuture[]::new))
+            .allOf(instances.stream().map(BedwarsMapInstance::deleteMapAsync).toArray(CompletableFuture[]::new))
             .thenRunAsync(instances::clear);
-    }
-
-    /**
-     * Should only be used in the plugin's onDisable
-     */
-    public void unloadAllSync() {
-        instances.forEach(BedwarsMapInstance::deleteMap);
-        instances.clear();
     }
 
     public Optional<BedwarsMapInstance> getInstanceById(int id) {
