@@ -1,6 +1,7 @@
 package net.strokkur.bedwars.paper.map.data;
 
 import com.google.common.base.Preconditions;
+import net.kyori.adventure.util.TriState;
 import net.strokkur.bedwars.paper.BedwarsPaper;
 import net.strokkur.bedwars.paper.map.EmptyChunkGenerator;
 import net.strokkur.bedwars.paper.map.MapNotFoundException;
@@ -39,15 +40,18 @@ public abstract class AbstractBedwarsMapInstance {
     public CompletableFuture<World> loadMap() {
         return copyWorldFiles()
             .thenApplyAsync(finished -> {
-                world = Bukkit.createWorld(new WorldCreator(worldName()).generator(new EmptyChunkGenerator()));
-                Preconditions.checkNotNull(world);
-
-                return this.world;
-            }, Bukkit.getScheduler().getMainThreadExecutor(BedwarsPaper.instance()));
+                world = Bukkit.createWorld(new WorldCreator(worldName())
+                    .generator(new EmptyChunkGenerator())
+                    .keepSpawnLoaded(TriState.FALSE)
+                );
+                return Preconditions.checkNotNull(world);
+            }, BedwarsPaper.mainThreadExecutor());
     }
-    
-    public CompletableFuture<@Nullable Void> copyWorldFiles() {
-        return CompletableFuture.supplyAsync(() -> {
+
+    public CompletableFuture<Void> copyWorldFiles() {
+        return CompletableFuture.runAsync(() -> {
+            final long startTime = System.currentTimeMillis();
+            
             final File mapFile = BedwarsPaper.dataPath().resolve("maps/" + bedwarsMap.name() + ".zip").toFile();
             if (!mapFile.exists()) {
                 throw new MapNotFoundException(bedwarsMap.name());
@@ -61,7 +65,6 @@ public abstract class AbstractBedwarsMapInstance {
             //noinspection ResultOfMethodCallIgnored
             worldFolder.mkdirs();
 
-            byte[] buffer = new byte[1024];
             try (ZipInputStream zipInput = new ZipInputStream(new FileInputStream(mapFile))) {
                 ZipEntry zipEntry;
                 while ((zipEntry = zipInput.getNextEntry()) != null) {
@@ -70,13 +73,10 @@ public abstract class AbstractBedwarsMapInstance {
                         new File(worldFolder, zipEntry.getName()).mkdirs();
                         continue;
                     }
-
+            
                     final File outputFile = new File(worldFolder, zipEntry.getName());
                     try (FileOutputStream fileOutputStream = new FileOutputStream(outputFile)) {
-                        int len;
-                        while ((len = zipInput.read(buffer)) > 0) {
-                            fileOutputStream.write(buffer, 0, len);
-                        }
+                        zipInput.transferTo(fileOutputStream);
                     }
                 }
             }
@@ -84,7 +84,7 @@ public abstract class AbstractBedwarsMapInstance {
                 BedwarsPaper.logger().error("Failed to unzip {}", mapFile.getPath(), zipFileError);
             }
 
-            return null;
+            BedwarsPaper.logger().info("Finished copying {} in {}ms", worldName(), System.currentTimeMillis() - startTime);
         });
     }
 
@@ -98,7 +98,7 @@ public abstract class AbstractBedwarsMapInstance {
                 try {
                     CompletableFuture.runAsync(
                         () -> {
-                            world.getPlayers().forEach(player -> player.teleport(BedwarsPaper.mainWorld().getSpawnLocation()));
+                            world.getPlayers().forEach(player -> player.teleportAsync(BedwarsPaper.mainWorld().getSpawnLocation()));
                             Bukkit.unloadWorld(world, false);
                         },
                         BedwarsPaper.mainThreadExecutor()
@@ -134,5 +134,5 @@ public abstract class AbstractBedwarsMapInstance {
             BedwarsPaper.logger().warn("An error occurred while trying to delete {}", worldName(), directoryRemoveException);
         }
     }
-    
+
 }

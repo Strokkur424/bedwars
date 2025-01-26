@@ -75,15 +75,17 @@ class MapSubCommand {
             .thenAcceptAsync(
                 world -> {
                     if (ctx.getSource().getExecutor() instanceof Player player) {
-                        player.teleport(new Location(world, 0, 250, 0));
-                        player.setFlying(true);
+                        player.teleportAsync(new Location(world, 0, 250, 0))
+                            .thenRunAsync(
+                                () -> player.setFlying(true),
+                                BedwarsPaper.mainThreadExecutor()
+                            );
                     }
                     ctx.getSource().getSender().sendRichMessage("<aqua>Successfully loaded <map> (Took <time>ms)",
                         Placeholder.unparsed("map", world.getName()),
                         Placeholder.unparsed("time", Long.toString(System.currentTimeMillis() - startTime))
                     );
-                },
-                BedwarsPaper.mainThreadExecutor()
+                }
             );
         return Command.SINGLE_SUCCESS;
     }
