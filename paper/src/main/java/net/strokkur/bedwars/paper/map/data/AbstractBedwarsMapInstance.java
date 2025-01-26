@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -36,6 +37,10 @@ public abstract class AbstractBedwarsMapInstance {
     public AbstractBedwarsMapInstance(BedwarsMap map) {
         this.bedwarsMap = map;
         this.mapData = bedwarsMap.data().orElseGet(MapData::new).clone();
+    }
+    
+    public Optional<World> getWorld() {
+        return Optional.ofNullable(world);
     }
 
     public abstract String worldName();

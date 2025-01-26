@@ -37,59 +37,7 @@ public class EditorSubCommand {
                 )
             )
 
-            .then(Commands.literal("global")
-
-                .then(Commands.literal("iron-spawn-rate")
-                    .then(Commands.argument("rate", DoubleArgumentType.doubleArg(0))
-
-                    )
-                )
-
-                .then(Commands.literal("diamond-gens")
-                    .then(Commands.literal("list")
-
-                    )
-
-                    .then(Commands.literal("remove")
-                        .then(Commands.argument("index", IntegerArgumentType.integer(0))
-
-                        )
-                    )
-
-                    .then(Commands.literal("add")
-                        .then(Commands.argument("position", ArgumentTypes.blockPosition())
-
-                        )
-                    )
-                )
-
-                .then(Commands.literal("emerald-gens")
-                    .then(Commands.literal("list")
-
-                    )
-
-                    .then(Commands.literal("remove")
-                        .then(Commands.argument("index", IntegerArgumentType.integer(0))
-
-                        )
-                    )
-                    
-                    .then(Commands.literal("add")
-                        .then(Commands.argument("position", ArgumentTypes.blockPosition())
-
-                        )
-                    )
-                )
-
-                .then(Commands.literal("bounding-box")
-                    .then(Commands.argument("corner-one", ArgumentTypes.blockPosition())
-                        .then(Commands.argument("corner-two", ArgumentTypes.blockPosition())
-
-                        )
-                    )
-                )
-
-            )
+            .then(EditorGlobalSubCommand.construct())
 
             .then(Commands.literal("teams")
                 .then(Commands.literal("info")

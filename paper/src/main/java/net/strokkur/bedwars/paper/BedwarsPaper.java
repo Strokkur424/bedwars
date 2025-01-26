@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import net.strokkur.bedwars.paper.map.WorldManager;
 import net.strokkur.bedwars.paper.map.data.BedwarsMap;
+import net.strokkur.bedwars.paper.map.editor.EditorManager;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -86,6 +87,7 @@ public class BedwarsPaper extends JavaPlugin {
     @Override
     public void onEnable() {
         mainWorld = Bukkit.getWorlds().getFirst();
+        this.getServer().getPluginManager().registerEvents(EditorManager.instance(), this);
     }
 
     @Override

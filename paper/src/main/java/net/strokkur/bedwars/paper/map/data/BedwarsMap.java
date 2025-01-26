@@ -1,6 +1,7 @@
 package net.strokkur.bedwars.paper.map.data;
 
 import net.strokkur.bedwars.paper.BedwarsPaper;
+import net.strokkur.bedwars.paper.map.editor.BedwarsDevMapInstance;
 import org.jetbrains.annotations.Unmodifiable;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -26,10 +27,6 @@ public class BedwarsMap {
     public BedwarsMap(String name) {
         this.name = name;
         this.data = null;
-    }
-    
-    public BedwarsDevMapInstance createDevInstance() {
-        return new BedwarsDevMapInstance(this);
     }
 
     public BedwarsMapInstance createInstance() {

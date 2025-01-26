@@ -1,5 +1,6 @@
 package net.strokkur.bedwars.paper.util;
 
+import io.papermc.paper.math.BlockPosition;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.jspecify.annotations.NullMarked;
@@ -19,6 +20,11 @@ public class PureLocation implements Cloneable {
         this.z = z;
     }
 
+    @Override
+    public String toString() {
+        return "%s | %s | %s".formatted(x, y, z);
+    }
+
     public Location apply(World world) {
         return new Location(world, x + 0.5d, y + 0.5d, z + 0.5d);
     }
@@ -35,5 +41,10 @@ public class PureLocation implements Cloneable {
     
     public static PureLocation empty() {
         return new PureLocation(0, 0, 0);
+    }
+    
+    @SuppressWarnings("UnstableApiUsage")
+    public static PureLocation from(BlockPosition blockPosition) {
+        return new PureLocation(blockPosition.blockX(), blockPosition.blockY(), blockPosition.blockZ());
     }
 }

@@ -1,8 +1,11 @@
-package net.strokkur.bedwars.paper.map.data;
+package net.strokkur.bedwars.paper.map.editor;
 
 import com.google.common.base.Charsets;
 import com.google.gson.Gson;
 import net.strokkur.bedwars.paper.BedwarsPaper;
+import net.strokkur.bedwars.paper.map.data.AbstractBedwarsMapInstance;
+import net.strokkur.bedwars.paper.map.data.BedwarsMap;
+import net.strokkur.bedwars.paper.map.data.MapData;
 import org.jspecify.annotations.NullMarked;
 
 import java.io.File;
