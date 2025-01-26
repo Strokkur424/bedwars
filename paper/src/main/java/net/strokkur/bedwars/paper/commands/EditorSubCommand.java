@@ -1,7 +1,5 @@
 package net.strokkur.bedwars.paper.commands;
 
-import com.mojang.brigadier.arguments.DoubleArgumentType;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -41,18 +39,18 @@ public class EditorSubCommand {
 
             .then(Commands.literal("teams")
                 .then(Commands.literal("info")
-                    .executes(EditorSubCommand::executeTeamsInfo)
+//                    .executes(EditorSubCommand::executeTeamsInfo)
                 )
 
                 .then(Commands.literal("remove")
                     .then(Commands.argument("team", new TeamArgument())
-                        .executes(EditorSubCommand::executeTeamRemove)
+//                        .executes(EditorSubCommand::executeTeamRemove)
                     )
                 )
 
                 .then(Commands.literal("add")
                     .then(Commands.argument("team", new TeamArgument())
-                        .executes(EditorSubCommand::executeTeamAdd)
+//                        .executes(EditorSubCommand::executeTeamAdd)
                     )
                 )
 
@@ -61,38 +59,38 @@ public class EditorSubCommand {
 
                         .then(Commands.literal("spawn")
                             .then(Commands.argument("location", ArgumentTypes.blockPosition())
-                                .executes(EditorSubCommand::executeModifyTeamSpawn)
+//                                .executes(EditorSubCommand::executeModifyTeamSpawn)
                             )
                         )
 
                         .then(Commands.literal("generator")
                             .then(Commands.argument("location", ArgumentTypes.blockPosition())
-                                .executes(EditorSubCommand::executeModifyTeamGenerator)
+//                                .executes(EditorSubCommand::executeModifyTeamGenerator)
                             )
                         )
 
                         .then(Commands.literal("playershop")
                             .then(Commands.argument("location", ArgumentTypes.blockPosition())
-                                .executes(EditorSubCommand::executeModifyTeamPlayershop)
+//                                .executes(EditorSubCommand::executeModifyTeamPlayershop)
                             )
                         )
 
                         .then(Commands.literal("teamshop")
                             .then(Commands.argument("location", ArgumentTypes.blockPosition())
-                                .executes(EditorSubCommand::executeModifyTeamTeamshop)
+//                                .executes(EditorSubCommand::executeModifyTeamTeamshop)
                             )
                         )
 
                         .then(Commands.literal("bed")
                             .then(Commands.argument("location", ArgumentTypes.blockPosition())
-                                .executes(EditorSubCommand::executeModifyTeamBed)
+//                                .executes(EditorSubCommand::executeModifyTeamBed)
                             )
                         )
 
                         .then(Commands.literal("bounds")
                             .then(Commands.argument("corner-one", ArgumentTypes.blockPosition())
                                 .then(Commands.argument("corner-two", ArgumentTypes.blockPosition())
-                                    .executes(EditorSubCommand::executeModifyTeamBoundingBox)
+//                                    .executes(EditorSubCommand::executeModifyTeamBoundingBox)
                                 )
                             )
                         )
@@ -103,44 +101,11 @@ public class EditorSubCommand {
     }
 
     private static int executeJoin(final CommandContext<CommandSourceStack> ctx) {
-        return 0;
+        return 1;
     }
 
-    private static int executeTeamsInfo(final CommandContext<CommandSourceStack> ctx) {
-        return 0;
-    }
-
-    private static int executeTeamRemove(final CommandContext<CommandSourceStack> ctx) {
-        return 0;
-    }
-
-    private static int executeTeamAdd(final CommandContext<CommandSourceStack> ctx) {
-        return 0;
-    }
-
-    private static int executeModifyTeamSpawn(final CommandContext<CommandSourceStack> ctx) {
-        return 0;
-    }
-
-    private static int executeModifyTeamGenerator(final CommandContext<CommandSourceStack> ctx) {
-        return 0;
-    }
-
-    private static int executeModifyTeamPlayershop(final CommandContext<CommandSourceStack> ctx) {
-        return 0;
-    }
-
-    private static int executeModifyTeamTeamshop(final CommandContext<CommandSourceStack> ctx) {
-        return 0;
-    }
-
-    private static int executeModifyTeamBed(final CommandContext<CommandSourceStack> ctx) {
-        return 0;
-    }
-
-
-    private static int executeModifyTeamBoundingBox(final CommandContext<CommandSourceStack> ctx) {
-        return 0;
+    private static int executeSaveConfig(final CommandContext<CommandSourceStack> ctx) {
+        return 1;
     }
 
 }

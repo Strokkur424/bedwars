@@ -5,10 +5,7 @@ import net.kyori.adventure.util.TriState;
 import net.strokkur.bedwars.paper.BedwarsPaper;
 import net.strokkur.bedwars.paper.map.EmptyChunkGenerator;
 import net.strokkur.bedwars.paper.map.MapNotFoundException;
-import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
+import org.bukkit.*;
 import org.codehaus.plexus.util.FileUtils;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -38,7 +35,7 @@ public abstract class AbstractBedwarsMapInstance {
         this.bedwarsMap = map;
         this.mapData = bedwarsMap.data().orElseGet(MapData::new).clone();
     }
-    
+
     public Optional<World> getWorld() {
         return Optional.ofNullable(world);
     }
@@ -98,21 +95,19 @@ public abstract class AbstractBedwarsMapInstance {
             catch (IOException zipFileError) {
                 BedwarsPaper.logger().error("Failed to unzip {}", mapFile.getPath(), zipFileError);
             }
-            
+
             BedwarsPaper.logger().info("Finished copying {} in {}ms", worldName(), System.currentTimeMillis() - startTime);
         });
     }
 
     private CompletableFuture<Void> teleportOutPlayers() {
         if (world == null) {
-            return new CompletableFuture<>();
+            return CompletableFuture.completedFuture(null);
         }
     
-        return CompletableFuture.allOf(world.getPlayers()
-            .stream()
-            .map(player -> player.teleportAsync(BedwarsPaper.mainWorld().getSpawnLocation()))
-            .toArray(CompletableFuture[]::new)
-        );
+        final Location targetLocation = BedwarsPaper.mainWorld().getSpawnLocation();
+        return BedwarsPaper.mainWorld().getChunkAtAsync(targetLocation)
+            .thenRun(() -> world.getPlayers().forEach(player -> player.teleport(targetLocation)));
     }
 
     public CompletableFuture<Void> deleteMapAsync() {
