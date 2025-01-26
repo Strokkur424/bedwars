@@ -1,6 +1,6 @@
-rootProject.name = "HypixelBedwars"
+rootProject.name = "bedwars"
 
-sequenceOf("paper", "velocity").forEach { 
+sequenceOf("paper").forEach { 
     include(it)
     project(":$it").projectDir = file(it)
 }
