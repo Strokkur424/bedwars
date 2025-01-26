@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ConfigSerializable
-public class MapData {
+public class MapData implements Cloneable {
 
-    public int teamAmount;
+    public int teamAmount = 0;
 
-    public int playersPerTeam;
+    public int playersPerTeam = 0;
 
     public List<TeamData> teamData = new ArrayList<>();
 
@@ -20,33 +20,50 @@ public class MapData {
 
     public List<PureLocation> emeraldGenerators = new ArrayList<>();
 
-    public PureLocation boundCornerOne;
+    public PureLocation boundCornerOne = PureLocation.empty();
 
-    public PureLocation boundCornerTwo;
+    public PureLocation boundCornerTwo = PureLocation.empty();
     
+    public double ironSpawnRate = 1.0d;
+
+    @Override
+    public MapData clone() {
+        try {
+            final MapData cloned = (MapData) super.clone();
+            cloned.teamData = new ArrayList<>(this.teamData.stream().map(TeamData::clone).toList());
+            cloned.diamondGenerators = new ArrayList<>(this.diamondGenerators.stream().map(PureLocation::clone).toList());
+            cloned.emeraldGenerators = new ArrayList<>(this.emeraldGenerators.stream().map(PureLocation::clone).toList());
+            cloned.boundCornerOne = this.boundCornerOne.clone();
+            cloned.boundCornerTwo = this.boundCornerTwo.clone();
+            return cloned;
+        }
+        catch (CloneNotSupportedException failedClone) {
+            throw new Error(failedClone);
+        }
+    }
 
     @ConfigSerializable
-    public static class TeamData {
+    public static class TeamData implements Cloneable {
 
-        private String color;
+        private String color = null;
+        
+        public PureLocation spawnLocation = PureLocation.empty();
 
-        public PureLocation spawnLocation;
+        public PureLocation generatorLocation = PureLocation.empty();
 
-        public PureLocation generatorLocation;
+        public PureLocation playerShopLocation = PureLocation.empty();
 
-        public PureLocation playerShopLocation;
+        public PureLocation teamShopLocation = PureLocation.empty();
 
-        public PureLocation teamShopLocation;
+        public PureLocation bedBottomLocation = PureLocation.empty();
 
-        public PureLocation bedBottomLocation;
+        public PureLocation bedTopLocation = PureLocation.empty();
 
-        public PureLocation bedTopLocation;
+        public int bedFacing = 0;
 
-        public int bedFacing;
+        public PureLocation innerBoundBoxOne = PureLocation.empty();
 
-        public PureLocation innerBoundBoxOne;
-
-        public PureLocation innerBoundBoxTwo;
+        public PureLocation innerBoundBoxTwo = PureLocation.empty();
 
         public TeamColor color() {
             Preconditions.checkNotNull(color, "Team has no color set");
@@ -60,6 +77,25 @@ public class MapData {
             }
 
             this.color = color.toString();
+        }
+
+        @Override
+        public TeamData clone() {
+            try {
+                final TeamData cloned = (TeamData) super.clone();
+                cloned.spawnLocation = this.spawnLocation.clone();
+                cloned.generatorLocation = this.generatorLocation.clone();
+                cloned.playerShopLocation = this.playerShopLocation.clone();
+                cloned.teamShopLocation = this.teamShopLocation.clone();
+                cloned.bedBottomLocation = this.bedBottomLocation.clone();
+                cloned.bedTopLocation = this.bedTopLocation.clone();
+                cloned.innerBoundBoxOne = this.innerBoundBoxOne.clone();
+                cloned.innerBoundBoxTwo = this.innerBoundBoxTwo.clone();
+                return cloned;
+            }
+            catch (CloneNotSupportedException failedClone) {
+                throw new Error(failedClone);
+            }
         }
     }
 }

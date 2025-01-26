@@ -7,7 +7,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 @NullMarked
 @ConfigSerializable
-public class PureLocation {
+public class PureLocation implements Cloneable {
 
     private final int x;
     private final int y;
@@ -21,5 +21,19 @@ public class PureLocation {
 
     public Location apply(World world) {
         return new Location(world, x + 0.5d, y + 0.5d, z + 0.5d);
+    }
+
+    @Override
+    public PureLocation clone() {
+        try {
+            return (PureLocation) super.clone();
+        }
+        catch (CloneNotSupportedException cloneNotSupportedException) {
+            throw new Error(cloneNotSupportedException);
+        }
+    }
+    
+    public static PureLocation empty() {
+        return new PureLocation(0, 0, 0);
     }
 }

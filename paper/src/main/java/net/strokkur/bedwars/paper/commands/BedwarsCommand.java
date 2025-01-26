@@ -12,6 +12,7 @@ public class BedwarsCommand {
     public static LiteralCommandNode<CommandSourceStack> createNode() {
         return Commands.literal("bedwars")
             .then(MapSubCommand.create())
+            .then(EditorSubCommand.create())
             .build();
     }
 }

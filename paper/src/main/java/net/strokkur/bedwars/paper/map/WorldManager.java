@@ -53,7 +53,7 @@ public class WorldManager {
         try (Stream<Path> stream = Files.list(BedwarsPaper.dataPath().resolve("maps"))) {
             stream
                 .map(path -> path.getFileName().toString().split("\\.")[0])
-                .map(mapName -> new BedwarsMap(new MapData(), mapName))
+                .map(BedwarsMap::new)
                 .forEach(map -> maps.put(map.name(), map));
         }
         catch (IOException exception) {
@@ -74,6 +74,6 @@ public class WorldManager {
     }
 
     public Optional<BedwarsMap> getMap(String mapName) {
-        return Optional.of(maps.get(mapName));
+        return Optional.ofNullable(maps.get(mapName));
     }
 }

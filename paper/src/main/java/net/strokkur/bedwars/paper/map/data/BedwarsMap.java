@@ -1,10 +1,11 @@
 package net.strokkur.bedwars.paper.map.data;
 
-import com.google.common.base.Preconditions;
+import net.strokkur.bedwars.paper.BedwarsPaper;
 import org.jetbrains.annotations.Unmodifiable;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,13 +19,17 @@ public class BedwarsMap {
     private static final List<BedwarsMapInstance> instances = new ArrayList<>(16);
 
     @Nullable
-    private MapData data;
+    protected MapData data;
 
-    private String name;
+    protected String name;
 
-    public BedwarsMap(MapData mapData, String name) {
+    public BedwarsMap(String name) {
         this.name = name;
-        this.data = mapData;
+        this.data = null;
+    }
+    
+    public BedwarsDevMapInstance createDevInstance() {
+        return new BedwarsDevMapInstance(this);
     }
 
     public BedwarsMapInstance createInstance() {
@@ -67,7 +72,18 @@ public class BedwarsMap {
     public List<BedwarsMapInstance> getAllInstances() {
         return List.copyOf(instances);
     }
-
+    
+    public Path dataFolderPath() {
+        return BedwarsPaper.dataPath().resolve("data");
+    }
+    
+    public Path dataPath() {
+        return dataFolderPath().resolve(name() + ".json");
+    }
+    
+    public Path bakDataPath() {
+        return dataFolderPath().resolve(name() + ".json.bak");
+    }
 
     public String name() {
         return this.name;
@@ -77,9 +93,8 @@ public class BedwarsMap {
         this.name = newName;
     }
 
-    public MapData data() {
-        Preconditions.checkNotNull(data);
-        return this.data;
+    public Optional<MapData> data() {
+        return Optional.ofNullable(this.data);
     }
 
     public void data(MapData newData) {
