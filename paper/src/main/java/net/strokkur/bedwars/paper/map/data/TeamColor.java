@@ -20,13 +20,13 @@ public enum TeamColor {
     BLUE(NamedTextColor.BLUE),
     PURPLE(NamedTextColor.DARK_PURPLE),
     MAGENTA(NamedTextColor.LIGHT_PURPLE);
-    
+
     private final NamedTextColor color;
-    
+
     TeamColor(NamedTextColor color) {
         this.color = color;
     }
-    
+
     public NamedTextColor color() {
         return color;
     }

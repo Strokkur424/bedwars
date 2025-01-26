@@ -11,22 +11,21 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import io.papermc.paper.command.brigadier.argument.CustomArgumentType;
 import net.strokkur.bedwars.paper.BedwarsPaper;
+import net.strokkur.bedwars.paper.map.data.BedwarsMap;
 import org.jspecify.annotations.NullMarked;
 
 import java.util.concurrent.CompletableFuture;
 
 @SuppressWarnings("UnstableApiUsage")
 @NullMarked
-public class MapArgument implements CustomArgumentType.Converted<String, String> {
+public class MapArgument implements CustomArgumentType.Converted<BedwarsMap, String> {
 
     @Override
-    public String convert(String nativeType) throws CommandSyntaxException {
-        if (!BedwarsPaper.worldManager().doesMapExist(nativeType)) {
+    public BedwarsMap convert(String nativeType) throws CommandSyntaxException {
+        return BedwarsPaper.worldManager().getMap(nativeType).orElseThrow(() -> {
             final Message message = new LiteralMessage("No map named " + nativeType + " exists.");
-            throw new CommandSyntaxException(new SimpleCommandExceptionType(message), message);
-        }
-
-        return nativeType;
+            return new CommandSyntaxException(new SimpleCommandExceptionType(message), message);
+        });
     }
 
     @Override

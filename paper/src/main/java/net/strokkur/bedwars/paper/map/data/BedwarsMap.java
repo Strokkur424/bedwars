@@ -1,11 +1,13 @@
 package net.strokkur.bedwars.paper.map.data;
 
 import com.google.common.base.Preconditions;
+import org.jetbrains.annotations.Unmodifiable;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
@@ -33,7 +35,7 @@ public class BedwarsMap {
 
     public CompletableFuture<Void> unloadInstance(BedwarsMapInstance instance) {
         return CompletableFuture
-            .runAsync(instance::deleteMap)
+            .runAsync(instance::deleteMapAsync)
             .thenRunAsync(() -> instances.remove(instance));
     }
 
@@ -42,10 +44,28 @@ public class BedwarsMap {
             .allOf(instances.parallelStream().map(BedwarsMapInstance::deleteMapAsync).toArray(CompletableFuture[]::new))
             .thenRunAsync(instances::clear);
     }
-    
+
+    /**
+     * Should only be used in the plugin's onDisable
+     */
     public void unloadAllSync() {
         instances.forEach(BedwarsMapInstance::deleteMap);
         instances.clear();
+    }
+
+    public Optional<BedwarsMapInstance> getInstanceById(int id) {
+        for (BedwarsMapInstance instance : instances) {
+            if (instance.id == id) {
+                return Optional.of(instance);
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    @Unmodifiable
+    public List<BedwarsMapInstance> getAllInstances() {
+        return List.copyOf(instances);
     }
 
 

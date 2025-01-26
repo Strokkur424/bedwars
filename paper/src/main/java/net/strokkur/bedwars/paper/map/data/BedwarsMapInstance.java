@@ -93,7 +93,11 @@ public class BedwarsMapInstance {
             }, Bukkit.getScheduler().getMainThreadExecutor(BedwarsPaper.instance()));
     }
 
-    public CompletableFuture<Void> deleteMapAsync() {
+    public CompletableFuture<Void> unloadMap() {
+        return this.bedwarsMap.unloadInstance(this);
+    }
+
+    CompletableFuture<Void> deleteMapAsync() {
         return CompletableFuture.runAsync(() -> {
             if (worldFolder == null || !worldFolder.exists() || !worldFolder.isDirectory()) {
                 return;
@@ -123,7 +127,7 @@ public class BedwarsMapInstance {
         });
     }
 
-    public void deleteMap() {
+    void deleteMap() {
         if (worldFolder == null || !worldFolder.exists() || !worldFolder.isDirectory()) {
             return;
         }

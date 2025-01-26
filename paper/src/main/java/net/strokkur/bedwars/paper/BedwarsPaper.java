@@ -13,7 +13,6 @@ import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Optional;
 import java.util.concurrent.Executor;
 
 @NullMarked
@@ -59,7 +58,7 @@ public class BedwarsPaper extends JavaPlugin {
     public static WorldManager worldManager() {
         return Preconditions.checkNotNull(instance().worldManager);
     }
-    
+
     public static World mainWorld() {
         return Preconditions.checkNotNull(instance().mainWorld);
     }
@@ -94,6 +93,7 @@ public class BedwarsPaper extends JavaPlugin {
         if (mainWorld != null) {
             Bukkit.getOnlinePlayers().forEach(player -> player.teleport(mainWorld.getSpawnLocation()));
         }
+
         worldManager().getAllBedwarsMaps().forEach(BedwarsMap::unloadAllSync);
     }
 }
